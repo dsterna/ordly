@@ -25,7 +25,7 @@ const COLORS = {
 
 function App() {
   const [word, setWord] = useState(
-    ord4[Math.floor(Math.random() * ord4.length)]
+    ord4[Math.floor(Math.random() * ord4.length)].toLowerCase()
   );
 
   const [usedLetters, setUsedLetters] = useState([]);
@@ -33,8 +33,24 @@ function App() {
   const [facit, setFacit] = useState([]);
   const [invalidWord, setInvalidWord] = useState("");
   const [cheat, setCheat] = useState(false);
+  const [done, setDone] = useState(false);
+
   async function nextLevel(doneWord) {
-    const found = ord4.find((word) => word === doneWord);
+    if (doneWord === word) {
+      setDone(true);
+      setFacit([
+        ...facit,
+        [
+          { color: COLORS["green"] },
+          { color: COLORS["green"] },
+          { color: COLORS["green"] },
+          { color: COLORS["green"] },
+          { color: COLORS["green"] },
+        ],
+      ]);
+      return;
+    }
+    const found = ord4.find((word) => word.toLowerCase() === doneWord);
     if (found) {
       setLevel(level + 1);
       const answer = [...doneWord].map((letter, index) => {
@@ -53,7 +69,7 @@ function App() {
       setInvalidWord(doneWord);
       setTimeout(() => {
         setInvalidWord("");
-      }, 2000);
+      }, 3000);
     }
   }
 
@@ -105,10 +121,10 @@ function App() {
           />
         </div>
       </div>
-      {level === 6 && (
+      {(level === 6 || done) && (
         <div className="game-over-wrapper">
-          <h3 className="game-over" style={{ color: COLORS["green"] }}>
-            {word}
+          <h3 className="game-over">
+            {done ? "Bra jobbat" : `Order var: ${word}`}
             <button onClick={() => window.location.reload()}>Nytt ord</button>
           </h3>
         </div>
