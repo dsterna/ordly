@@ -4469,7 +4469,6 @@ export const ord4 = [
   "vivör",
   "vobba",
   "vodka",
-  "voile",
   "vojta",
   "vokal",
   "volta",

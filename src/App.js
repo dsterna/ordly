@@ -7,6 +7,9 @@ const COLORS = {
   gray: "#dcdcde",
   yellow: "#F6F55C",
   green: "#3CAEA3",
+  darkgreen: "darkgreen",
+  darkyellow: "darkgoldenrod",
+  black: "black",
 };
 /**
  * TODO:
@@ -25,7 +28,8 @@ const COLORS = {
 
 function App() {
   const [word, setWord] = useState(
-    ord4[Math.floor(Math.random() * ord4.length)].toLowerCase()
+    // ord4[Math.floor(Math.random() * ord4.length)].toLowerCase()
+    "ottos"
   );
 
   const [usedLetters, setUsedLetters] = useState([]);
@@ -34,7 +38,26 @@ function App() {
   const [invalidWord, setInvalidWord] = useState("");
   const [cheat, setCheat] = useState(false);
   const [done, setDone] = useState(false);
+  const [newUsedLetters, setNewUsedLetters] = useState([]);
 
+  function getCorrectColor(letter, index, forUsedLetters = false) {
+    if (letter === word[index]) {
+      return {
+        color: forUsedLetters ? COLORS["darkgreen"] : COLORS["green"],
+        letter: letter,
+      };
+    } else if (word.includes(letter)) {
+      return {
+        color: forUsedLetters ? COLORS["darkyellow"] : COLORS["yellow"],
+        letter: letter,
+      };
+    } else {
+      return {
+        color: forUsedLetters ? COLORS["black"] : COLORS["gray"],
+        letter: letter,
+      };
+    }
+  }
   async function nextLevel(doneWord) {
     if (doneWord === word) {
       setDone(true);
@@ -50,21 +73,30 @@ function App() {
       ]);
       return;
     }
-    const found = ord4.find((word) => word.toLowerCase() === doneWord);
-    if (found) {
+    // const found = ord4.find((word) => word.toLowerCase() === doneWord);
+    if (true) {
       setLevel(level + 1);
-      const answer = [...doneWord].map((letter, index) => {
-        let tempSet = new Set([...usedLetters, ...doneWord]);
-        setUsedLetters(Array.from(tempSet));
-        if (letter === word[index]) {
-          return { color: COLORS["green"], letter: letter };
-        } else if (word.includes(letter)) {
-          return { color: COLORS["yellow"], letter: letter };
-        } else {
-          return { color: COLORS["gray"] };
-        }
-      });
+      let tempSet = new Set([
+        ...usedLetters.map((elem) => elem.letter),
+        ...doneWord,
+      ]);
+
+      const tempAry = Array.from(tempSet);
+      /**
+       * Här är bugg, usedLetters är inte lete
+       */
+      const tempis = tempAry.map((letter, index) =>
+        getCorrectColor(letter, index, true)
+      );
+      console.log("gräs", tempis);
+      const answer = [...doneWord].map((letter, index) =>
+        getCorrectColor(letter, index)
+      );
+      console.log(answer);
+
       setFacit([...facit, answer]);
+
+      setUsedLetters(tempis);
     } else {
       setInvalidWord(doneWord);
       setTimeout(() => {
@@ -72,7 +104,14 @@ function App() {
       }, 3000);
     }
   }
-
+  function checkLetterColor(letter) {
+    console.log(letter, facit);
+    const test = facit.map((array) =>
+      array.includes((elem) => elem.letter === letter)
+    );
+    console.log(test, letter);
+    return "green";
+  }
   return (
     <div>
       <header></header>
@@ -135,10 +174,15 @@ function App() {
             style={{ cursor: "pointer" }}
             onClick={() => console.log("slumpa 2")}
           >
+            {console.log("kalle", usedLetters)}
             {usedLetters.map((letter) => {
               return (
-                <span className="letter" key={letter}>
-                  {letter}
+                <span
+                  className="letter"
+                  key={letter.letter}
+                  style={{ color: letter.color }}
+                >
+                  {letter.letter}
                 </span>
               );
             })}
