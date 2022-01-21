@@ -9,7 +9,7 @@ const COLORS = {
   green: "#3CAEA3",
   darkgreen: "darkgreen",
   darkyellow: "darkgoldenrod",
-  black: "black",
+  darkgray: "darkgray",
 };
 /**
  * TODO:
@@ -53,7 +53,7 @@ function App() {
       };
     } else {
       return {
-        color: forUsedLetters ? COLORS["black"] : COLORS["gray"],
+        color: forUsedLetters ? COLORS["darkgray"] : COLORS["gray"],
         letter: letter,
       };
     }
@@ -73,8 +73,8 @@ function App() {
       ]);
       return;
     }
-    // const found = ord4.find((word) => word.toLowerCase() === doneWord);
-    if (true) {
+    const found = ord4.find((word) => word.toLowerCase() === doneWord);
+    if (found) {
       setLevel(level + 1);
       let tempSet = new Set([
         ...usedLetters.map((elem) => elem.letter),
@@ -83,16 +83,17 @@ function App() {
 
       const tempAry = Array.from(tempSet);
       /**
-       * Här är bugg, usedLetters är inte lete
+       * Här är bugg,  usedLetters måste göras om varje gång och kan inte bara appendas
+       *
        */
+
       const tempis = tempAry.map((letter, index) =>
         getCorrectColor(letter, index, true)
       );
-      console.log("gräs", tempis);
+
       const answer = [...doneWord].map((letter, index) =>
         getCorrectColor(letter, index)
       );
-      console.log(answer);
 
       setFacit([...facit, answer]);
 
@@ -105,11 +106,10 @@ function App() {
     }
   }
   function checkLetterColor(letter) {
-    console.log(letter, facit);
     const test = facit.map((array) =>
       array.includes((elem) => elem.letter === letter)
     );
-    console.log(test, letter);
+
     return "green";
   }
   return (
