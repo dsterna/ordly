@@ -28,8 +28,7 @@ const COLORS = {
 
 function App() {
   const [word, setWord] = useState(
-    // ord4[Math.floor(Math.random() * ord4.length)].toLowerCase()
-    "ottos"
+    ord4[Math.floor(Math.random() * ord4.length)].toLowerCase()
   );
 
   const [usedLetters, setUsedLetters] = useState([]);
